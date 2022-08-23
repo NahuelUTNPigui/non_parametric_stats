@@ -9,10 +9,6 @@ proc utilidad()=
   
 proc ioutilidad(filename:string):seq[float]=
   read_archivo(filename)
-
-
-
-
 proc print_opt(valores:seq[float],opt:proc (v:seq[float]):float)=
   echo opt(valores)
 proc print_opciones(valores:seq[float],opcion:string)=

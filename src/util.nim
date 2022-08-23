@@ -46,6 +46,26 @@ func kurtosis*(v:seq[float]):float=
     k*=sumatoria
     k-=3*pow(n-1,2)/((n-2)*(n-3))
     return k
+func std_k*(n=0.0):float=
+    
+    if(n>3):
 
-     
-
+        pow(24*n*pow(n-1,2)/((n-2)*(n-3)*(n+5)*(n+3)),2)
+    else:
+        -100.0
+func skew*(v:seq[float]):float=
+    let n= len(v).float
+    if(n > 2):
+        let m=media(v).float
+        var suma=0.0
+        for num in v:
+            suma += pow(( num - m )/5,3)
+        var res = n/((n-1)*(n-2))*suma
+        return res
+    else:
+        return 0.0     
+func std_sk*(n=0.0):float=
+    if(n>2):
+        pow(6*n*(n-1)/((n-2)*(n+1)*(n+3)),1/2)
+    else:
+        0.0
