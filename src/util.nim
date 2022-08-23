@@ -1,7 +1,9 @@
 import std/math
+import quintil_function
 func suma*(x:float,y:float):float=
     x+y
 
+# Se puede hacer mas eficiente con calcular varias cosas a la vez y dar la media y la std por valor
 func media*(v:seq[float]):float=
     var res=0.0
     var i=0.0
@@ -69,3 +71,18 @@ func std_sk*(n=0.0):float=
 func is_like*(n1:float,n2:float,err=0.001):bool=
     let abs_diff=abs(n1-n2)
     return abs_diff<=err
+func isNormal*(v:seq[float],a:float):bool=
+    if(len(v)<2 or a<=0 or a>=1):
+        return false
+    let k = kurtosis(v)
+    let st_k=std_k(len(v).float)
+    let sk=skew(v)
+    let st_sk=std_sk(len(v).float)
+    let zo=acklaman(a)
+    let zf=acklaman(1-a)
+    let zk=z_score_list(k,0,st_k)
+    let zsk=z_score_list(sk,0,st_sk)
+    if(zo<=zk and zk<=zf and zsk<=zf and zo<=zsk):
+        return true
+    else:
+        return false

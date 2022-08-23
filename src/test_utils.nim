@@ -41,6 +41,9 @@ proc test_skew(expected:float, numeros:seq[float])=
     assert is_like(expected,skew(numeros))
 proc test_std_skew(expected:float, numeros:seq[float])=
     assert is_like(expected,std_sk(len(numeros).float))
+
+proc test_is_normal(expected:bool,numeros:seq[float])=
+    assert isNormal(numeros,0.05)==expected
 proc test_capitulo2(numeros:seq[float])=
     echo "Media"
     test_media()
@@ -54,6 +57,8 @@ proc test_capitulo2(numeros:seq[float])=
     test_skew(-1.018,numeros)
     echo "std skew"
     test_std_skew(0.501,numeros)
+    echo "normal"
+    test_is_normal(false,numeros)
 when isMainModule:
     test_capitulo2(numeros)
 
