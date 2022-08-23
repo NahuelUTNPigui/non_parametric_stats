@@ -37,8 +37,6 @@ func kurtosis*(v:seq[float]):float=
     let promedio=media(v)
     let std=std_desv(v)
     let n=len(v).toFloat()
-    if(n<3):
-        return -100
     var k= n*(n+1)/((n-1)*(n-2)*(n-3))
     var sumatoria=0.0
     for x in v:
@@ -47,19 +45,18 @@ func kurtosis*(v:seq[float]):float=
     k-=3*pow(n-1,2)/((n-2)*(n-3))
     return k
 func std_k*(n=0.0):float=
-    
     if(n>3):
-
-        pow(24*n*pow(n-1,2)/((n-2)*(n-3)*(n+5)*(n+3)),2)
+        pow(24*n*pow(n-1,2)/((n-2)*(n-3)*(n+5)*(n+3)),1/2)
     else:
         -100.0
 func skew*(v:seq[float]):float=
+    let std=std_desv(v)
     let n= len(v).float
     if(n > 2):
         let m=media(v).float
         var suma=0.0
         for num in v:
-            suma += pow(( num - m )/5,3)
+            suma += pow(( num - m )/std,3)
         var res = n/((n-1)*(n-2))*suma
         return res
     else:
@@ -69,3 +66,6 @@ func std_sk*(n=0.0):float=
         pow(6*n*(n-1)/((n-2)*(n+1)*(n+3)),1/2)
     else:
         0.0
+func is_like*(n1:float,n2:float,err=0.001):bool=
+    let abs_diff=abs(n1-n2)
+    return abs_diff<=err
