@@ -3,3 +3,4 @@ nimblecache/
 htmldocs/
 src/test_utils.exe
 src/test_quintil_function.exe
+src/*.exe
