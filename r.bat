@@ -1,1 +1,1 @@
-.\stats numeros %1
+.\stats %1 %2 %3
