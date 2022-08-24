@@ -4,6 +4,7 @@ func suma*(x:float,y:float):float=
     x+y
 
 # Se puede hacer mas eficiente con calcular varias cosas a la vez y dar la media y la std por valor
+#Capitulo 2
 func media*(v:seq[float]):float=
     var res=0.0
     var i=0.0
@@ -86,3 +87,6 @@ func isNormal*(v:seq[float],a:float):bool=
         return true
     else:
         return false
+
+func wilcoxon_signed_rank(v:seq[seq[float]]):bool=
+    return false
