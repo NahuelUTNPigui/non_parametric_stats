@@ -21,11 +21,8 @@ func search*[T](l:Olist[T],t:T):int=
     return -1
 #Sin repeticiones
 proc add*[T](list:var Olist[T],t:T)=
-
-
     if(list.len==0):
-        list.v.add(t)
-        
+        list.v.add(t)       
     else:
         var l=0
         var r = list.v.len-1
@@ -53,8 +50,39 @@ proc add*[T](list:var Olist[T],t:T)=
             else:
                 l=temp_l
                 r=temp_r
-        
-
+#Con repeticiones
+proc add_rep*[T](list: var Olist[T],t:T)=
+    if(list.len==0):
+        list.v.add(t)       
+    else:
+        var l=0
+        var r = list.v.len-1
+        var i:int=0
+        #Debo averiguar en que index debo meter
+        while (l<=r):
+            if(cmp(list.v[l],t)>0):
+                list.v.insert(t,l)
+                break
+            if(cmp(list.v[r],t)<0):
+                list.v.insert(t,r+1)
+                break
+            i=floor((l+r)/2).int
+            let diff=cmp(list.v[i],t)
+            var temp_l=l
+            var temp_r=r
+            if diff<0:
+                temp_l=i+1
+            elif diff > 0:
+                temp_r=i-1
+            else:
+                list.v.insert(t,i)
+                break
+            if(temp_r<temp_l):
+                list.v.insert(t,r-1)
+                break
+            else:
+                l=temp_l
+                r=temp_r
 proc show*[T](l:Olist[T])=
     for val in l.v:
         echo val

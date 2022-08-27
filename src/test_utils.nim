@@ -59,6 +59,28 @@ proc test_capitulo2(numeros:seq[float])=
     test_std_skew(0.501,numeros)
     echo "normal"
     test_is_normal(false,numeros)
+proc wilcoxon_test()=
+    let pairs = @[
+        @[31.0,31],
+        @[14.0,14],
+        @[53.0,50],
+        @[18.0,30],
+        @[21.0,28],
+        @[44.0,48.0],
+        @[12.0,35],
+        @[36.0,32],
+        @[22.0,23],
+        @[29.0,34],
+        @[17.0,27],
+        @[40.0,42]
+    ]
+    var table=diff_table(pairs)
+    echo table
+    let t = compute_t(table)
+    echo t
+    assert false==wilcoxon_signed_rank(pairs,0.05)
+proc test_capitulo3()=
+    wilcoxon_test()
 when isMainModule:
-    test_capitulo2(numeros)
+    test_capitulo3()
 

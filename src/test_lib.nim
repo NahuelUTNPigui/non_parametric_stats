@@ -21,11 +21,11 @@ proc add_orden()=
     echo isOrdered(ol.v)
 when isMainModule:
     var ol=Olist[float](v: newSeq[float](0))
-    ol.add(4.0)
-    ol.add(2.0)
-    ol.add(6.09)
-    ol.add(1.0)
-    ol.add(5.0)
+    ol.add_rep(4.0)
+    ol.add_rep(2.0)
+    ol.add_rep(2.0)
+    ol.add_rep(2.0)
+    ol.add_rep(5.0)
     echo ol.v
     add_orden()
 

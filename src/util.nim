@@ -1,4 +1,5 @@
 import std/math
+import std/tables
 import quintil_function
 func suma*(x:float,y:float):float=
     x+y
@@ -87,6 +88,36 @@ func isNormal*(v:seq[float],a:float):bool=
         return true
     else:
         return false
-
-func wilcoxon_signed_rank(v:seq[seq[float]]):bool=
+#Capitulo 3
+func diff_table*(pairs:seq[seq[float]]): Table[int,float] =
+    var t=initTable[int,float]()
+    var i=0
+    for pair in pairs:
+        let x1=pair[0]
+        let x2=pair[1]
+        if(abs(x1-x2) > 0.001):
+            t[i]=x2-x1
+        inc i
+    return t
+func compute_t*(t:var Table[int,float]):float=
+    var sum_pos=0.0
+    var sum_neg=0.0
+    for v in t.mvalues:
+        if(v>0):
+            sum_pos += v
+        else:
+            sum_neg = sum_neg + v
+    min(sum_pos,abs(sum_neg))
+func wilcoxon_signed_rank*(v:seq[seq[float]],alfa:float):bool=
+    var diffs=diff_table(v)
+    let n=diffs.len.toFloat
+    let mean=n*(n+1)/4
+    let st=pow(n*(n+1)*(2*n+1)/24,1/2)
+    let t=compute_t(diffs)
+    let z = z_score_list(t,mean,st)
+    let expected_z=acklaman(1-alfa/2)
+    if z<expected_z and z > -1*expected_z:
+        return true
+    else:
+        return false
     return false
