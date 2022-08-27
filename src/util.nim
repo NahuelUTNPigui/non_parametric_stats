@@ -3,7 +3,12 @@ import std/tables
 import quintil_function
 func suma*(x:float,y:float):float=
     x+y
-
+func p_from_zeta_zelen_severo(z:float):float=
+    let a=0.4361836
+    let b=0.1201676
+    let c = 0.937298
+    let t = pow(1+0.033267*z,-1)
+    1-(a*t-b*t*t+c*pow(t,3))*pow(E,-1*pow(z,2)/2)/sqrt(2*PI)
 # Se puede hacer mas eficiente con calcular varias cosas a la vez y dar la media y la std por valor
 #Capitulo 2
 func media*(v:seq[float]):float=
@@ -108,6 +113,7 @@ func compute_t*(t:var Table[int,float]):float=
         else:
             sum_neg = sum_neg + v
     min(sum_pos,abs(sum_neg))
+#Si es verdadero entonces no hay diferencias, si es falso hay diferencias
 func wilcoxon_signed_rank*(v:seq[seq[float]],alfa:float):bool=
     var diffs=diff_table(v)
     let n=diffs.len.toFloat
@@ -121,5 +127,22 @@ func wilcoxon_signed_rank*(v:seq[seq[float]],alfa:float):bool=
     else:
         return false
     return false
+
 func sign_test*(v:seq[seq[float]],alfa:float):bool=
-    true
+    var np=0.0
+    var nn=0.0
+    for pair in v:
+        let diff=pair[1]-pair[0]
+        if(abs(diff)<0.001):
+            if(diff<0):
+                nn += 1
+            else:
+                np += 1
+    let z=(max(np,nn)-0.5*(np+nn)-0.5)/(0.5*pow(np+nn,1/2))
+    let p1=1-p_from_zeta_zelen_severo(z)
+    let p=p1*2
+    if p<alfa:
+        return true
+    else:
+        return false
+    

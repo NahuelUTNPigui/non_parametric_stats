@@ -74,13 +74,26 @@ proc wilcoxon_test()=
         @[17.0,27],
         @[40.0,42]
     ]
-    var table=diff_table(pairs)
-    echo table
-    let t = compute_t(table)
-    echo t
     assert false==wilcoxon_signed_rank(pairs,0.05)
+proc sign_test_test()=
+    let pairs = @[
+        @[31.0,31],
+        @[14.0,14],
+        @[53.0,50],
+        @[18.0,30],
+        @[21.0,28],
+        @[44.0,48.0],
+        @[12.0,35],
+        @[36.0,32],
+        @[22.0,23],
+        @[29.0,34],
+        @[17.0,27],
+        @[40.0,42]
+    ]
+    assert false==sign_test(pairs,0.05)    
 proc test_capitulo3()=
     wilcoxon_test()
+    sign_test_test()
 when isMainModule:
     test_capitulo3()
 
