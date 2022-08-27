@@ -121,3 +121,5 @@ func wilcoxon_signed_rank*(v:seq[seq[float]],alfa:float):bool=
     else:
         return false
     return false
+func sign_test*(v:seq[seq[float]],alfa:float):bool=
+    true
