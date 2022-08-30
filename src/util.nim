@@ -1,6 +1,13 @@
 import std/math
 import std/tables
 import quintil_function
+import lib
+type
+    EffectSize* = enum
+        small,medium,large
+
+
+
 func suma*(x:float,y:float):float=
     x+y
 func p_from_zeta_zelen_severo(z:float):float=
@@ -121,13 +128,14 @@ func wilcoxon_signed_rank*(v:seq[seq[float]],alfa:float):bool=
     let st=pow(n*(n+1)*(2*n+1)/24,1/2)
     let t=compute_t(diffs)
     let z = z_score_list(t,mean,st)
+    #Debo usar al alfa como 0.025 y 0.975 si pongo un alfa del 0.05
     let expected_z=acklaman(1-alfa/2)
     if z<expected_z and z > -1*expected_z:
         return true
     else:
         return false
     return false
-
+#Si es verdadero entonces no hay diferencias, si es falso hay diferencias
 func sign_test*(v:seq[seq[float]],alfa:float):bool=
     var np=0.0
     var nn=0.0
@@ -145,4 +153,22 @@ func sign_test*(v:seq[seq[float]],alfa:float):bool=
         return true
     else:
         return false
+func toEffectSize*(z:float,n:float):EffectSize=
+    let res=abs(z)/sqrt(n)
+    if res<=0.1:
+        return small
+    elif res<=0.3:
+        return medium
+    else:
+        return large
+#Capitulo 4
+func compute_ranks*(v:seq[seq[float]]):Olist=
+    Olist()
+#Este esta mas dificil, los empates comparten el rank
+#Esta vez es diferente el primer valor representa la columna y el segundo la fila
+func mann_whitney_u_test*(v:seq[seq[float]],alfa:float):bool=
+    let n1=v[0].len
+    let n2=v[1].len
+    let xu=n1*n2/2
+    let su=sqrt(n1*n2*(n1+n2+1)/24)
     

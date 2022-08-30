@@ -1,73 +1,47 @@
 import math
 type
-    Olist*[T] = object
-        v* : seq[T]
-func len*[T](l:Olist[T]):int=
+    Contador* = object
+        nombre:string
+        counter:int
+proc newContador(nombre:string):Contador=
+    Contador(nombre:nombre,counter:1)
+type
+    ParValorContador=object
+        valor:float
+        contador:Contador
+proc newParValorContador(valor:float,nombre:string):ParValorContador=
+    ParValorContador(valor:valor,contador:newContador(nombre))
+
+func `inc`(par:var ParValorContador)=
+    inc par.contador.counter
+type
+    Olist* = object
+        #Pero puede haber 1 o 2 contadores
+        v* : seq[ParValorContador]
+func len*(l:Olist):int=
     l.v.len
-func get*[T](l:Olist[T],i:int):T=
-    l.v[i]
-func search*[T](l:Olist[T],t:T):int=
-    var l=0
-    var r = l.v.len
-    while (l<=r):
-        let m=floor((l+r)/2).integer
-        let diff=cmp(l.v[m],t)
-        if diff<0:
-            l=m+1
-        elif diff > 0:
-            r=m-1
-        else:
-            return 1
-    return -1
-#Sin repeticiones
-proc add*[T](list:var Olist[T],t:T)=
-    if(list.len==0):
-        list.v.add(t)       
-    else:
-        var l=0
-        var r = list.v.len-1
-        var i:int=0
-        #Debo averiguar en que index debo meter
-        while (l<=r):
-            if(cmp(list.v[l],t)>0):
-                list.v.insert(t,l)
-                break
-            if(cmp(list.v[r],t)<0):
-                list.v.insert(t,r+1)
-                break
-            i=floor((l+r)/2).int
-            let diff=cmp(list.v[i],t)
-            var temp_l=l
-            var temp_r=r
-            if diff<0:
-                temp_l=i+1
-            elif diff > 0:
-                temp_r=i-1
-            else:
-                break
-            if(temp_r<temp_l):
-                list.v.insert(t,r-1)
-            else:
-                l=temp_l
-                r=temp_r
+func getValor*(l:Olist,i:int):float=
+    l.v[i].valor
 #Con repeticiones
-proc add_rep*[T](list: var Olist[T],t:T)=
+proc add_rep*(list: var Olist,t:float,nombre:string)=
     if(list.len==0):
-        list.v.add(t)       
+        list.v.add(newParValorContador(t,nombre))       
     else:
         var l=0
         var r = list.v.len-1
         var i:int=0
         #Debo averiguar en que index debo meter
         while (l<=r):
-            if(cmp(list.v[l],t)>0):
-                list.v.insert(t,l)
-                break
-            if(cmp(list.v[r],t)<0):
-                list.v.insert(t,r+1)
-                break
+            #No existe
+            if(cmp(list.v[l].valor,t)>0):
+                list.v.insert(newParValorContador(t,nombre),l)
+                return
+            #No existe
+            if(cmp(list.v[r].valor,t)<0):
+                list.v.insert(newParValorContador(t,nombre),r+1)
+                return
             i=floor((l+r)/2).int
-            let diff=cmp(list.v[i],t)
+            let diff=cmp(list.v[i].valor,t)
             var temp_l=l
             var temp_r=r
             if diff<0:
@@ -75,14 +49,16 @@ proc add_rep*[T](list: var Olist[T],t:T)=
             elif diff > 0:
                 temp_r=i-1
             else:
-                list.v.insert(t,i)
-                break
+                #Existe
+                list.v.insert(newParValorContador(t,nombre),i)
+                return
+            #No existe
             if(temp_r<temp_l):
-                list.v.insert(t,r-1)
-                break
+                list.v.insert(newParValorContador(t,nombre),r-1)
+                return
             else:
                 l=temp_l
                 r=temp_r
-proc show*[T](l:Olist[T])=
-    for val in l.v:
-        echo val
+proc show*(l:Olist)=
+    for par in l.v:
+        echo par.valor
