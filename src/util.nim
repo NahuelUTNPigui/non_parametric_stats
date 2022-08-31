@@ -5,9 +5,6 @@ import lib
 type
     EffectSize* = enum
         small,medium,large
-
-
-
 func suma*(x:float,y:float):float=
     x+y
 func p_from_zeta_zelen_severo(z:float):float=
@@ -171,4 +168,11 @@ func mann_whitney_u_test*(v:seq[seq[float]],alfa:float):bool=
     let n2=v[1].len
     let xu=n1*n2/2
     let su=sqrt(n1*n2*(n1+n2+1)/24)
+    var olist=newOlist[float]()
+    olist.inicializar_list(v[0])
+    olist.inicializar_list(v[1])
+    olist.contar_lista(v[0],1)
+    olist.contar_lista(v[1],2)
+    let sum_rank_1=olist.sumar_ranks(1)
+    let sum_rank_2=olist.sumar_ranks(2)
     
