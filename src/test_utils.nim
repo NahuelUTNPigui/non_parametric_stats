@@ -91,9 +91,17 @@ proc sign_test_test()=
         @[40.0,42]
     ]
     assert false==sign_test(pairs,0.05)    
+proc mann_whitney_u_test_test()=
+    let pairs = @[
+        @[48.0,40,39,50,41,38,53],
+        @[14.0,18,20,10,12,102,17]
+    ]
+    assert false == mann_whitney_u_test(pairs)      
 proc test_capitulo3()=
     wilcoxon_test()
     sign_test_test()
+proc test_capitulo4()=
+    mann_whitney_u_test_test()
 when isMainModule:
-    test_capitulo3()
+    test_capitulo4()
 

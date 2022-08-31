@@ -159,13 +159,11 @@ func toEffectSize*(z:float,n:float):EffectSize=
     else:
         return large
 #Capitulo 4
-func compute_ranks*(v:seq[seq[float]]):Olist=
-    Olist()
 #Este esta mas dificil, los empates comparten el rank
 #Esta vez es diferente el primer valor representa la columna y el segundo la fila
-func mann_whitney_u_test*(v:seq[seq[float]],alfa:float):bool=
-    let n1=v[0].len
-    let n2=v[1].len
+func mann_whitney_u_test*(v:seq[seq[float]],alfa=0.05):bool=
+    let n1=v[0].len.toFloat
+    let n2=v[1].len.toFloat
     let xu=n1*n2/2
     let su=sqrt(n1*n2*(n1+n2+1)/24)
     var olist=newOlist[float]()
@@ -175,4 +173,12 @@ func mann_whitney_u_test*(v:seq[seq[float]],alfa:float):bool=
     olist.contar_lista(v[1],2)
     let sum_rank_1=olist.sumar_ranks(1)
     let sum_rank_2=olist.sumar_ranks(2)
-    
+    let u1 = n1*n2+n1*(n1+1)/2-sum_rank_1.toFloat
+    let u2 = n1*n2+n2*(n2+1)/2-sum_rank_2.toFloat
+    let u =min(u1,u2)
+    let z_value=z_score_list(u,xu,su)
+    let z_expected=acklaman(1-alfa/2)
+    if (z_value < -1*z_expected or z_value > z_expected):
+        false
+    else:
+        true
