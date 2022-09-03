@@ -182,3 +182,6 @@ func mann_whitney_u_test*(v:seq[seq[float]],alfa=0.05):bool=
         false
     else:
         true
+#Creo que lo entiendo pero es un toque laberinticog
+func kolmogorov_smirnov_two_sample_test*(v:seq[seq[float]],alfa=0.05):bool=
+    true
