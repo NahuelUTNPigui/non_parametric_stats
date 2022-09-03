@@ -39,6 +39,7 @@ proc print_opciones_par(filename:string,opcion:string)=
     for n in valores:
       echo n
 when declared(commandLineParams):
+    echo "old pc"
     if(commandLineParams().len()>0):
       
       let opcion= commandLineParams()[1]
