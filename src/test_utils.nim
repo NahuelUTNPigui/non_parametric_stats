@@ -96,12 +96,18 @@ proc mann_whitney_u_test_test()=
         @[48.0,40,39,50,41,38,53],
         @[14.0,18,20,10,12,102,17]
     ]
-    assert false == mann_whitney_u_test(pairs)      
+    assert false == mann_whitney_u_test(pairs)
+proc kolmogorov_smirnov_two_sample_test_test()=
+    var pairs = @[
+        @[48.0,40,39,50,41,38,53],
+        @[14.0,18,20,10,12,102,17]
+    ]
+    assert false == kolmogorov_smirnov_two_sample_test(pairs)      
 proc test_capitulo3()=
     wilcoxon_test()
     sign_test_test()
 proc test_capitulo4()=
     mann_whitney_u_test_test()
 when isMainModule:
-    test_capitulo4()
+    kolmogorov_smirnov_two_sample_test_test()
 

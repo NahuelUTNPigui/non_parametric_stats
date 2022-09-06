@@ -1,5 +1,6 @@
 import std/math
 import std/tables
+import std/algorithm
 import quintil_function
 import lib
 type
@@ -182,6 +183,42 @@ func mann_whitney_u_test*(v:seq[seq[float]],alfa=0.05):bool=
         false
     else:
         true
+func kolmo_smir_statistics(lista:seq[float],valor:float):float=
+    let n=lista.len.toFloat
+    let menores=smallest_closest_index(lista,valor).toFloat
+    menores/n
+func p_for_z_kolmo_smir(Z:float):float=
+    if Z<0.27:
+        return 1
+    elif Z<1:
+        let Q=exp(-1.233701*(1/Z)^2)
+        return 1-(Q+Q^9+Q^25)*(2.506628)/Z
+    elif Z<3.1:
+        let Q=exp(-2*Z^2)
+        return 2*(Q-Q^4+Q^9-Q^16)
+    else:
+        return 0
 #Creo que lo entiendo pero es un toque laberinticog
-func kolmogorov_smirnov_two_sample_test*(v:seq[seq[float]],alfa=0.05):bool=
-    true
+# v es una matriz donde una fila representa el mismo sample, los numeros deben estar ordenados
+#Es una version un poco ineficiente
+proc kolmogorov_smirnov_two_sample_test*(v:var seq[seq[float]],alfa=0.05):bool=
+    #Debo hacer una lista ordenada numeros
+    v[0].sort()
+    v[1].sort()
+    var max_distance=0.0
+    for valor in v[0]:
+        let f=kolmo_smir_statistics(v[0],valor)
+        let g=kolmo_smir_statistics(v[1],valor)
+        if(abs(f-g)>max_distance):
+            max_distance=abs(f-g)
+    for valor in v[1]:
+        let f=kolmo_smir_statistics(v[0],valor)
+        let g=kolmo_smir_statistics(v[1],valor)
+        if(abs(f-g)>max_distance):
+            max_distance=abs(f-g)
+    let z=max_distance*sqrt((v[0].len.toFloat*v[1].len.toFloat)/(v[1].len.toFloat+v[0].len.toFloat))
+    let p=p_for_z_kolmo_smir(z)
+    if alfa>p:
+        return false
+    else:
+        return true

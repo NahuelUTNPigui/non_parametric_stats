@@ -89,3 +89,18 @@ proc sumar_ranks*[T](ol:Olist[T],numero:int):int=
         else:
             suma += contadores.counter_2
     suma
+
+proc smallest_closest_index*(list:seq[float],valor:float):int=
+    var l=0
+    var r = list.len-1
+    while (l<=r):
+        let m = floor((l+r)/2).toInt
+        let diff=cmp(list[m],valor)
+        if diff==0:
+            return m
+        else:
+            if diff<0:
+                l=m+1
+            else:
+                r=m-1
+    return r
