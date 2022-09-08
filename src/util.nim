@@ -1,11 +1,18 @@
 import std/math
 import std/tables
+import std/sets
 import std/algorithm
 import quintil_function
 import lib
 type
     EffectSize* = enum
         small,medium,large
+type
+    FriedmanMatriz = object
+        v : seq[seq[float]]
+        ties : bool
+proc newFriedmanMatriz(v:seq[seq[float]],ties:bool):FriedmanMatriz=
+    FriedmanMatriz(v:v,ties:ties)
 func suma*(x:float,y:float):float=
     x+y
 func p_from_zeta_zelen_severo(z:float):float=
@@ -222,3 +229,52 @@ proc kolmogorov_smirnov_two_sample_test*(v:var seq[seq[float]],alfa=0.05):bool=
         return false
     else:
         return true
+
+#Capitulo 5
+func search_valor_float_list(lista:seq[float],valor:float):int=
+    var l=0
+    var r = lista.len
+    while (l<=r):
+        let m = floor((l+r)/2).toInt
+        let diff=cmp(lista[m],valor)
+        if diff<0:
+            l=m+1
+        elif diff > 0:
+            r=m-1
+        else:
+            return m
+    return -1
+#Re trabado aca
+proc ranks(row:seq[float],rep:bool):seq[float]=
+    if(rep):
+        row
+    else:
+        var row2=row
+        row2.sort()
+        var indices=newSeq[float](0)
+        for n in row:
+            indices.add(search_valor_float_list(row2,n).toFloat+1)
+        indices
+proc hay_repeticion(fila:seq[float]):bool=
+    var conjunto=initHashSet[float](fila.len)
+    for n in fila:
+        if(conjunto.contains(n)):
+            return true
+        else:
+            conjunto.incl(n)
+    return false
+proc create_friedman_test(v:seq[seq[float]]):FriedmanMatriz=
+    var matriz=newSeq[seq[float]](v.len)
+    var repeticion=false
+    for row in v:
+        let rep=hay_repeticion(row)
+        if(not repeticion):
+            repeticion = rep
+        let valores=ranks(row,rep)
+        
+        matriz.add(valores)
+
+#v es una lista de valores donde el primer indice representa la fila y el segundo la columna
+proc friedman_test(v:seq[seq[float]], alfa=0.05):bool=
+
+    true
